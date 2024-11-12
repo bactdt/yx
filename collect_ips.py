@@ -39,25 +39,35 @@ for url in urls:
         elements = []
         # 根据URL类型处理不同的响应
         if url.endswith('.txt'):
-            elements = response.text.split('\n')[:50]
+            elements = response.text.split('\n')[:30]
             print(f"从txt文件中获取到 {len(elements)} 个元素")
         elif url.endswith('.csv'):
             content = response.content.decode('utf-8')
             csv_reader = csv.reader(io.StringIO(content))
             next(csv_reader)  # 跳过标题行
             if url == 'https://ipdb.030101.xyz/api/bestcf.csv':
-                # 获取前20个IP
-                elements = [next(csv_reader)[0] for _ in range(30)]
-                print(f"从bestcf.csv中获取前30个IP")
+                # 安全地获取前20个IP
+                elements = []
+                try:
+                    for _ in range(30):
+                        row = next(csv_reader)
+                        if row and len(row) > 0:
+                            elements.append(row[0])
+                except StopIteration:
+                    print(f"CSV文件中只有 {len(elements)} 个IP")
+                print(f"从bestcf.csv中获取到 {len(elements)} 个IP")
             elif url == 'https://ipdb.030101.xyz/api/bestproxy.csv':
                 # 获取所有IP
-                elements = [row[0] for row in csv_reader]
-                print(f"从bestproxy.csv中获取所有IP")
+                elements = []
+                for row in csv_reader:
+                    if row and len(row) > 0:
+                        elements.append(row[0])
+                print(f"从bestproxy.csv中获取到 {len(elements)} 个IP")
             print(f"从CSV文件中获取到 {len(elements)} 个元素")
         else:
             soup = BeautifulSoup(response.text, 'html.parser')
             if url == 'https://cf.090227.xyz':
-                elements = soup.find_all('tr')
+                elements = soup.find_all('tr')[0:20]
             elif url == 'https://ip.164746.xyz/ipTop10.html':
                 elements = soup
             print(f"从HTML中获取到 {len(elements)} 个元素")
