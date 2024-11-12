@@ -60,7 +60,7 @@ if __name__ == "__main__":
     
     # 示例URL和子域名对应的IP列表
     subdomain_ip_mapping = {
-        'newcf': 'https://raw.bactdt.eu.org/yx/refs/heads/main/ip.txt',  # #域名一，bestcf.域名.com
+        'newcf': 'https://raw.githubusercontent.com/bactdt/yx/refs/heads/main/ip.txt',  # #域名一，bestcf.域名.com
         # 添加更多子域名和对应的IP列表URL
     }
     
